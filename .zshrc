@@ -1,62 +1,38 @@
-# Path to your oh-my-zsh installation.
+# ------------- Basic theme setup ---------------------
+
+THEME_HOME=${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+if [ ! -d $THEME_HOME ]; then
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $THEME_HOME
+fi
+
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# ------------- Basic oh-my-zsh setup -----------------
+
 export ZSH="$HOME/.oh-my-zsh"
 
-# Theme
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="jonathan"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
-zstyle ':omz:update' mode auto      # update automatically without asking
-
-# Auto-update frequency in days
+# enable auto-update every 15 days
+zstyle ':omz:update' mode auto
 zstyle ':omz:update' frequency 15
 
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# You can also set it to another string to have that shown instead of the default red dots.
-# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
-# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
-COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# or set a custom format using the strftime function format specifications,
-# see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
+# faster status check on large git repos
+DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Plugins
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Plugins-Overview
-# Standard plugins can be found in $ZSH/plugins/
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
 plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 
-export GODOT="$HOME/.config/godotenv/godot/bin/godot"
-export PATH="$HOME/.config/godotenv/godot/bin:$PATH"
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="$HOME/.dotnet/tools:$PATH"
-export PATH="$HOME/.cargo/bin:$PATH"
-
-# school aliases and vars
-alias sshmerlin="ssh xdanco00@merlin.fit.vutbr.cz"
-export EVA_DOCS="xdanco00@eva.fit.vutbr.cz:/homes/eva/xd/xdanco00/Dokumenty/"
-
-# git aliases
-alias gittree="git log --graph --pretty=oneline --abbrev=commit"
+# ------------- Plugins, better commands, configuration -----------------
 
 # zoxide (better cd)
 eval "$(zoxide init --cmd cd zsh)"
@@ -90,11 +66,32 @@ _fzf_comprun() {
     esac
 }
 
-# first clone this if it doesn't exist (change the repo name to start with .)
-source ~/.fzf-git.sh/fzf-git.sh
-
 # better cat
+if [ ! -f "$(bat --config-dir)/themes/Catppuccin Mocha.tmTheme" ]; then
+    mkdir -p "$(bat --config-dir)/themes"
+    wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme
+    bat cache --build
+fi
 export BAT_THEME="Catppuccin Mocha"
+alias cat="bat"
 
 # better ls
-alias ls="eza --color=always --long --git --icons=always --no-time --no-permissions"
+alias ls="eza --color=always --long --git --icons=always --no-time"
+
+# nice git log
+alias gittree="git log --graph --pretty=oneline --abbrev=commit"
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# ------------- School and envvar stuff -----------------
+
+export GODOT="$HOME/.config/godotenv/godot/bin/godot"
+export PATH="$HOME/.config/godotenv/godot/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.dotnet/tools:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
+
+# school aliases and vars
+alias sshmerlin="ssh xdanco00@merlin.fit.vutbr.cz"
+export EVA_DOCS="xdanco00@eva.fit.vutbr.cz:/homes/eva/xd/xdanco00/Dokumenty/"
