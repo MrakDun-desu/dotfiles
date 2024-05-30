@@ -125,6 +125,10 @@ then
     }
 fi
 
+bindkey -e
+bindkey '^n' history-search-backward
+bindkey '^n' history-search-forward
+
 # completion styling
 zstyle ":completion:*" matcher-list "m:{a-z}={A-Za-z}"
 zstyle ":completion:*" list-colors "${(s.:.)LS_COLORS}"
@@ -134,4 +138,7 @@ zstyle ":completion:*" menu no
 alias sshmerlin="ssh xdanco00@merlin.fit.vutbr.cz"
 export EVA_DOCS="xdanco00@eva.fit.vutbr.cz:/homes/eva/xd/xdanco00/Dokumenty"
 
-
+# path stuff
+export PATH="/home/mrak/.dotnet/tools:$PATH"
+export GODOT="/home/mrak/.config/godotenv/godot/bin/godot"
+export PATH="/home/mrak/.config/godotenv/godot/bin:$PATH"
