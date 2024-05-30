@@ -1,10 +1,3 @@
-# ------------- Basic theme setup ---------------------
-
-THEME_HOME=${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-if [ ! -d $THEME_HOME ]; then
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $THEME_HOME
-fi
-
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -12,86 +5,133 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# ------------- Basic oh-my-zsh setup -----------------
+# plugin manager
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
+[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+source "${ZINIT_HOME}/zinit.zsh"
 
-export ZSH="$HOME/.oh-my-zsh"
-
-ZSH_THEME="powerlevel10k/powerlevel10k"
-
-# enable auto-update every 15 days
-zstyle ':omz:update' mode auto
-zstyle ':omz:update' frequency 15
-
-# faster status check on large git repos
-DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Plugins
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Plugins-Overview
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-plugins=(git)
-
-source $ZSH/oh-my-zsh.sh
-
-# ------------- Plugins, better commands, configuration -----------------
-
-# zoxide (better cd)
-eval "$(zoxide init --cmd cd zsh)"
-
-# fzf and fd instead of find
-eval "$(fzf --zsh)"
-export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
-# ** completion for directories
-_fzf_compgen_path() {
-        fd --hidden --exclude .git . "$1"
-}
-
-_fzf_compgen_dir() {
-        fd --type=d --hidden --exclude .git . "$1"
-}
-
-export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always --line-range :500 {}'"
-export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
-
-_fzf_comprun() {
-    local command=$1
-    shift
-
-    case "$command" in
-        cd)     fzf --preview 'eza --tree --color=always {} | head -200' "$@" ;;
-        export|unset) fzf --preview "eval 'echo \$' {}" "$@" ;;
-        ssh)    fzf --preview 'dig {}' "$@" ;;
-        *)      fzf --preview "bat -n --color=always --line-range :500 {}" "$@" ;;
-    esac
-}
-
-# better cat
-if [ ! -f "$(bat --config-dir)/themes/Catppuccin Mocha.tmTheme" ]; then
-    mkdir -p "$(bat --config-dir)/themes"
-    wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme
-    bat cache --build
-fi
-export BAT_THEME="Catppuccin Mocha"
-alias cat="bat"
-
-# better ls
-alias ls="eza --color=always --long --git --icons=always --no-time"
-
-# nice git log
-alias gittree="git log --graph --pretty=oneline --abbrev=commit"
-
+# theme
+zinit ice depth=1; zinit light romkatv/powerlevel10k
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# ------------- School and envvar stuff -----------------
+# useful plugins
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+zinit light Aloxaf/fzf-tab
 
-export GODOT="$HOME/.config/godotenv/godot/bin/godot"
-export PATH="$HOME/.config/godotenv/godot/bin:$PATH"
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="$HOME/.dotnet/tools:$PATH"
-export PATH="$HOME/.cargo/bin:$PATH"
+# snippets (plugins from oh-my-zsh)
+zinit snippet OMZP::git
+zinit snippet OMZP::sudo
+zinit snippet OMZP::command-not-found
 
-# school aliases and vars
+# load completions
+autoload -Uz compinit && compinit
+zinit cdreplay -q
+
+# history options for better autocompletion
+HISTSIZE=5000
+HISTFILE=~/.zsh_history
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
+setopt appendhistory
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt hist_ignore_dups
+setopt hist_save_no_dups
+setopt hist_find_no_dups
+
+# if eza exists, use it instead of ls
+ls=ls
+if [ $+commands[eza] ]
+then
+    alias ls="eza --color=always --long --git --icons=always --no-time"
+    ls=eza
+else
+    alias ls="ls --color"
+fi
+
+# if zoxide exists, use it instead of cd
+cd=cd
+if [ $+commands[z] ]
+then
+    eval "$(zoxide init --cmd cd zsh)"
+    cd=z
+fi
+
+# decide which tool to use for finding -
+# debian uses fdfind, others fd, if not available just use find
+find=find
+if [ $+commands[fdfind] ]
+then
+    find=fdfind
+elif [ $+commands[fd] ]
+then
+    find=fd
+fi
+alias fd="$find"
+
+# decide which tool to use for cat -
+# debian uses batcat, others bat, if not available just use cat
+cat=cat
+if [ $+commands[batcat] ]
+then
+    cat=batcat
+elif [ $+commands[bat] ]
+then
+    cat=bat
+fi
+alias cat="$cat"
+
+# install catppuccin for bat
+if [ $cat != "cat" ]
+then
+    if [ ! -f "$($cat --config-dir)/themes/Catppuccin Mocha.tmTheme" ]
+    then
+        mkdir -p "$($cat --config-dir)/themes"
+        wget -P "$($cat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme
+        $cat cache --build
+    fi
+    export BAT_THEME="Catppuccin Mocha"
+fi
+
+# fzf
+if [ $+commands[fzf] ]
+then
+    # eval "$(fzf --zsh)" # doesn't work with debian version of fzf
+    export FZF_DEFAULT_COMMAND="$find --hidden --strip-cwd-prefix --exclude .git"
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    export FZF_ALT_C_COMMAND="$find --type=d --hidden --strip-cwd-prefix --exclude .git"
+    if [ $cat != "cat" ]
+    then
+        export FZF_CTRL_T_OPTS="--preview '$cat -n --color=always --line-range :500 {}'"
+    fi
+    if [ $ls != "ls" ]
+    then
+        export FZF_ALT_C_OPTS="--preview '$ls --tree --color=always {} | head -200'"
+    fi
+
+    zstyle ":fzf-tab:complete:cd:*" fzf-preview "$ls --color $realpath"
+    zstyle ":fzf-tab:complete:__zoxide_z:*" fzf-preview "ls --color $realpath"
+
+    _fzf_compgen_path() {
+        $find --hidden --exclude .git . "$1"
+    }
+
+    _fzf_compgen_dir() {
+        $find --type=d --hidden --exclude .git . "$1"
+    }
+fi
+
+# completion styling
+zstyle ":completion:*" matcher-list "m:{a-z}={A-Za-z}"
+zstyle ":completion:*" list-colors "${(s.:.)LS_COLORS}"
+zstyle ":completion:*" menu no
+
+# school stuff
 alias sshmerlin="ssh xdanco00@merlin.fit.vutbr.cz"
-export EVA_DOCS="xdanco00@eva.fit.vutbr.cz:/homes/eva/xd/xdanco00/Dokumenty/"
+export EVA_DOCS="xdanco00@eva.fit.vutbr.cz:/homes/eva/xd/xdanco00/Dokumenty"
+
+
