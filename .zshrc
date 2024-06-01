@@ -47,7 +47,7 @@ setopt hist_find_no_dups
 ls=ls
 if [ $+commands[eza] ]
 then
-    alias ls="eza --color=always --long --git --icons=always --no-time"
+    alias ls="eza --color=always --git --icons=always --no-time"
     ls=eza
 else
     alias ls="ls --color"
@@ -79,7 +79,8 @@ cat=cat
 if [ $+commands[batcat] ]
 then
     cat=batcat
-elif [ $+commands[bat] ]
+fi
+if [ $+commands[bat] ]
 then
     cat=bat
 fi
