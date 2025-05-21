@@ -44,7 +44,7 @@ while ! $continue; do
     case "$answer" in
     y | yes)
         programs+=("neovim" "docker" "docker-compose" "github-cli" "git-delta"
-            "docker-buildx" "fd" "npm" "wl-clipboard" "luarocks" "lazygit")
+            "docker-buildx" "fd" "fzf" "npm" "wl-clipboard" "luarocks" "lazygit")
         ;;
     n | no) ;;
     *)
@@ -69,7 +69,7 @@ while ! $continue; do
     y | yes)
         programs+=("fish" "fisher" "ttf-fantasque-nerd" "haruna" "steam"
             "steam-native-runtime" "tetrio-desktop" "vesktop-bin" "zen-browser-bin"
-            "mission-center" "libreoffice-still stow")
+            "mission-center" "libreoffice-still" "stow" "eza" "bat")
         has_stow=true
         ;;
     n | no) ;;
