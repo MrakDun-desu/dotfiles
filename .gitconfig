@@ -1,3 +1,6 @@
+[init]
+    defaultBranch = main
+
 [user]
     name = MrakDundesu
     email = m.danco@protonmail.com
@@ -14,7 +17,7 @@
     side-by-side = true
 
 [merge]
-    conflictstyle = diff3
+    conflictstyle = zdiff3
 
 [diff]
     colorMoved = default
