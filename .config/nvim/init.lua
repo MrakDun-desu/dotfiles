@@ -41,6 +41,8 @@ vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right win
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
+vim.keymap.set("n", "<leader>fc", ":e ~/.config/nvim/init.lua<CR>", { desc = "Open nvim config" })
+
 vim.api.nvim_create_autocmd("TextYankPost", {
     desc = "Highlight when yanking text",
     group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
@@ -96,10 +98,10 @@ require("lazy").setup({
             mappings = true,
             spec = {
                 { "<leader>s", group = "[S]earch" },
-                { "<leader>t", group = "[T]oggle" },
                 { "<leader>c", group = "[C]ode" },
                 { "<leader>f", group = "[F]ile" },
                 { "<leader>g", group = "[G]oto" },
+                { "<leader>t", group = "[T]odo" },
                 { "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
             },
         },
@@ -261,16 +263,22 @@ require("lazy").setup({
 
                     if
                         client
-                        and client:supports_method(
-                            vim.lsp.protocol.Methods.textDocument_inlayHint,
-                            event.buf
+                        and (
+                            client:supports_method(
+                                vim.lsp.protocol.Methods.textDocument_inlayHint,
+                                event.buf
+                            )
+                            -- omnisharp for some reason doesn't say that it supports inlay hints even
+                            -- when it does
+                            or client.name == "omnisharp"
                         )
                     then
-                        map("<leader>th", function()
+                        map("<leader>ch", function()
                             vim.lsp.inlay_hint.enable(
                                 not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf })
                             )
-                        end, "[T]oggle Inlay [Hints]")
+                        end, "Toggle Inlay [H]ints")
+                        vim.lsp.inlay_hint.enable(true)
                     end
                 end,
             })
@@ -407,9 +415,19 @@ require("lazy").setup({
                 documentation = { auto_show = true, auto_show_delay_ms = 300 },
             },
             sources = {
-                default = { "lsp", "path", "snippets", "lazydev" },
+                default = { "lsp", "path", "snippets", "lazydev", "buffer" },
                 providers = {
                     lazydev = { module = "lazydev.integrations.blink", score_offset = 100 },
+                    lsp = {
+                        module = "blink.cmp.sources.lsp",
+                        score_offset = 1000,
+                        async = false,
+                    },
+                    snippets = {
+                        module = "blink.cmp.sources.snippets",
+                        score_offset = -100,
+                        async = true,
+                    },
                 },
             },
             snippets = { preset = "luasnip" },
@@ -487,12 +505,12 @@ require("lazy").setup({
         cmd = "Trouble",
         keys = {
             {
-                "<leader>cx",
+                "<leader>cX",
                 "<cmd>Trouble diagnostics toggle<cr>",
                 desc = "Diagnostics (Trouble)",
             },
             {
-                "<leader>cX",
+                "<leader>cx",
                 "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
                 desc = "Buffer Diagnostics (Trouble)",
             },
@@ -506,13 +524,8 @@ require("lazy").setup({
 
     {
         "folke/snacks.nvim",
-        opts = {
-            lazygit = {},
-            animate = {},
-            rename = {},
-            terminal = {},
-            bigfile = {},
-        },
+        priority = 1000,
+        lazy = false,
         config = function()
             vim.api.nvim_create_autocmd("User", {
                 pattern = "MiniFilesActionRename",
@@ -521,6 +534,13 @@ require("lazy").setup({
                 end,
             })
             vim.keymap.set("n", "<leader>ft", Snacks.terminal.toggle, { desc = "Open terminal" })
+            Snacks.setup({
+                lazygit = { enabled = true },
+                animate = { enabled = true },
+                rename = { enabled = true },
+                terminal = { enabled = true },
+                bigfile = { enabled = true },
+            })
         end,
     },
 })
