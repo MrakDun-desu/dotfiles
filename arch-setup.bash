@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 programs=("vkd3d" "lib32-vkd3d" "noto-fonts-cjk" "noto-fonts-extra"
     "linux-headers" "linux-firmware" "octopi")
@@ -14,10 +14,10 @@ while ! $continue; do
 
     case "$answer" in
     n | nvidia)
-        programs+=("nvidia-utils" "lib32-nvidia-utils" "nvidia-settings")
+        programs+=("nvidia" "nvidia-dkms" "nvidia-utils" "lib32-nvidia-utils" "nvidia-settings")
         ;;
     o | nvidia-open)
-        programs+=("nvidia-utils" "lib32-nvidia-utils" "nvidia-settings"
+        programs+=("nvidia-open" "nvidia-open-dkms" "nvidia-utils" "lib32-nvidia-utils" "nvidia-settings"
             "vulkan-nouveau" "lib32-vulkan-nouveau" "xf86-video-nouveau")
         ;;
     a | amd)
@@ -56,7 +56,7 @@ while ! $continue; do
 done
 
 continue=false
-has_stow=false
+has_bat=false
 
 while ! $continue; do
 
@@ -70,7 +70,7 @@ while ! $continue; do
         programs+=("fish" "fisher" "ttf-fantasque-nerd" "haruna" "steam"
             "steam-native-runtime" "tetrio-desktop" "vesktop-bin" "zen-browser-bin"
             "mission-center" "libreoffice-still" "stow" "eza" "bat")
-        has_stow=true
+        has_bat=true
         ;;
     n | no) ;;
     *)
@@ -96,3 +96,7 @@ sudo pacman -S --needed base-devel &&
 echo "Installing specified programs..."
 echo "${programs[@]}"
 sudo pacman -S --needed "${programs[@]}"
+
+if $has_bat; then
+    bat cache --build
+fi

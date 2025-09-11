@@ -335,6 +335,25 @@ require("lazy").setup({
                 handlers = {
                     function(server_name)
                         local server = servers[server_name] or {}
+                        if server_name == "emmet_ls" then
+                            require("lspconfig")[server_name].setup({
+                                capabilities = capabilities,
+                                filetypes = {
+                                    "css",
+                                    "html",
+                                    "javascriptreact",
+                                    "typescriptreact",
+                                },
+                                init_options = {
+                                    html = {
+                                        options = {
+                                            ["bem_enabled"] = true,
+                                        },
+                                    },
+                                },
+                            })
+                            return
+                        end
                         server.capabilities = vim.tbl_deep_extend(
                             "force",
                             {},
@@ -344,6 +363,24 @@ require("lazy").setup({
                         require("lspconfig")[server_name].setup(server)
                     end,
                 },
+            })
+        end,
+    },
+
+    {
+        "Mathijs-Bakker/godotdev.nvim",
+        dependencies = {
+            "neovim/nvim-lspconfig",
+            "mfussenegger/nvim-dap",
+            {
+                "rcarriga/nvim-dap-ui",
+                dependencies = { "nvim-neotest/nvim-nio" },
+            },
+            "nvim-treesitter/nvim-treesitter",
+        },
+        config = function()
+            require("godotdev").setup({
+                csharp = false,
             })
         end,
     },
@@ -406,7 +443,7 @@ require("lazy").setup({
         --- @type blink.cmp.Config
         opts = {
             keymap = {
-                preset = "enter",
+                preset = "super-tab",
             },
             appearance = {
                 nerd_font_variant = "normal",
@@ -542,5 +579,11 @@ require("lazy").setup({
                 bigfile = { enabled = true },
             })
         end,
+    },
+
+    {
+        "windwp/nvim-ts-autotag",
+        dependencies = "nvim-treesitter/nvim-treesitter",
+        opts = {},
     },
 })
