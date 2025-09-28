@@ -9,6 +9,9 @@ indent_size = 4
 trim_trailing_whitespace = true
 max_line_length = 100
 
+[*.md]
+indent_size = 2
+
 # Web files
 [*.{html,jsx,tsx,yaml,yml,json,js,ts,css}]
 indent_size = 2
@@ -136,6 +139,8 @@ csharp_preserve_single_line_blocks = true
 
 # Warnings/hints to be ignored
 dotnet_diagnostic.IDE0058.severity = none
+dotnet_diagnostic.IDE3000.severity = none
+dotnet_diagnostic.IDE0022.severity = none
 
 ###############################
 # C++ Settings                #
@@ -204,3 +209,7 @@ cpp_space_around_ternary_operator = insert
 
 # wrapping
 cpp_wrap_preserve_blocks = one_liners
+
+[*.gd]
+indent_style = tab
+indent_size = 4

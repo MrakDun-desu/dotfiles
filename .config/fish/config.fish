@@ -23,3 +23,5 @@ function y
     end
     rm -f -- "$tmp"
 end
+
+set -gx PATH $PATH $HOME/.dotnet/tools
