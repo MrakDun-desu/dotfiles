@@ -1,0 +1,23 @@
+{
+  "FormattingOptions": {
+    "EnableEditorConfigSupport": true,
+  },
+  "RoslynExtensionsOptions": {
+    "enableImportCompletion": true,
+    "enableAnalyzersSupport": true,
+    "inlayHintsOptions": {
+      "enableForParameters": true,
+      "forLiteralParameters": true,
+      "forIndexerParameters": true,
+      "forObjectCreationParameters": true,
+      "forOtherParameters": true,
+      "suppressForParametersThatDifferOnlyBySuffix": true,
+      "suppressForParametersThatMatchMethodIntent": false,
+      "suppressForParametersThatMatchArgumentName": true,
+      "enableForTypes": true,
+      "forImplicitVariableTypes": true,
+      "forLambdaParameterTypes": true,
+      "forImplicitObjectCreation": true
+    }
+  }
+}
