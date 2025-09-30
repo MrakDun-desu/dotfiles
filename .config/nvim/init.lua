@@ -278,7 +278,6 @@ require("lazy").setup({
                                 not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf })
                             )
                         end, "Toggle Inlay [H]ints")
-                        vim.lsp.inlay_hint.enable(true)
                     end
                 end,
             })
