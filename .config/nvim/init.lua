@@ -380,6 +380,9 @@ require("lazy").setup({
             "nvim-treesitter/nvim-treesitter",
         },
         config = function()
+            if vim.fn.executable("gleam") == 1 then
+                require("lspconfig").gleam.setup({})
+            end
             require("godotdev").setup({
                 csharp = false,
             })

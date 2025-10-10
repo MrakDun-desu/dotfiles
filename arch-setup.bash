@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-programs=("vkd3d" "lib32-vkd3d" "noto-fonts-cjk" "noto-fonts-extra"
-    "linux-headers" "linux-firmware" "octopi")
+packages="vkd3d lib32-vkd3d noto-fonts-cjk noto-fonts-extra linux-headers linux-firmware octopi"
 
 continue=false
 
@@ -14,15 +13,15 @@ while ! $continue; do
 
     case "$answer" in
     n | nvidia)
-        programs+=("nvidia" "nvidia-dkms" "nvidia-utils" "lib32-nvidia-utils" "nvidia-settings")
+        packages="$packages nvidia nvidia-dkms nvidia-utils lib32-nvidia-utils nvidia-settings"
         ;;
     o | nvidia-open)
-        programs+=("nvidia-open" "nvidia-open-dkms" "nvidia-utils" "lib32-nvidia-utils" "nvidia-settings"
-            "vulkan-nouveau" "lib32-vulkan-nouveau" "xf86-video-nouveau")
+        packages="$packages nvidia-open nvidia-open-dkms nvidia-utils lib32-nvidia-utils nvidia-settings
+            vulkan-nouveau lib32-vulkan-nouveau xf86-video-nouveau"
         ;;
     a | amd)
-        programs+=("amdvlk" "lib32-amdvlk" "xf86-video-amdgpu"
-            "vulkan-radeon" "vulkan-mesa-layers" "lib32-vulkan-radeon")
+        packages="$packages amdvlk lib32-amdvlk xf86-video-amdgpu
+            vulkan-radeon vulkan-mesa-layers lib32-vulkan-radeon"
         ;;
     *)
         echo "Unknown option, choose again."
@@ -37,14 +36,14 @@ continue=false
 while ! $continue; do
 
     continue=true
-    echo "Install dev programs? (y/n)"
+    echo "Install dev packages? (y/n)"
     read answer
     answer="${answer,,}"
 
     case "$answer" in
     y | yes)
-        programs+=("neovim" "docker" "docker-compose" "github-cli" "git-delta"
-            "docker-buildx" "fd" "fzf" "npm" "wl-clipboard" "luarocks" "lazygit")
+        packages="$packages neovim docker docker-compose github-cli git-delta
+            docker-buildx fd fzf npm wl-clipboard luarocks lazygit"
         ;;
     n | no) ;;
     *)
@@ -61,15 +60,15 @@ has_bat=false
 while ! $continue; do
 
     continue=true
-    echo "Install other programs (mrak's recommendations)? (y/n)"
+    echo "Install other packages (mrak's recommendations)? (y/n)"
     read answer
     answer="${answer,,}"
 
     case "$answer" in
     y | yes)
-        programs+=("fish" "fisher" "ttf-fantasque-nerd" "haruna" "steam"
-            "steam-native-runtime" "tetrio-desktop" "vesktop-bin" "zen-browser-bin"
-            "mission-center" "libreoffice-still" "stow" "eza" "bat")
+        packages="$packages fish ttf-fantasque-nerd haruna steam
+            steam-native-runtime tetrio-desktop vesktop-bin zen-browser-bin
+            mission-center libreoffice-still stow eza bat"
         has_bat=true
         ;;
     n | no) ;;
@@ -93,9 +92,9 @@ sudo pacman -S --needed base-devel &&
     cd .. &&
     rm -rf paru
 
-echo "Installing specified programs..."
-echo "${programs[@]}"
-sudo pacman -S --needed "${programs[@]}"
+echo "Installing specified packages..."
+echo $packages"
+paru -S --noconfirm --skipreview --needed $packages
 
 if $has_bat; then
     bat cache --build
