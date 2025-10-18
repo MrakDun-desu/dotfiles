@@ -97,13 +97,36 @@ require("lazy").setup({
             preset = "helix",
             mappings = true,
             spec = {
-                { "<leader>s", group = "[S]earch" },
                 { "<leader>c", group = "[C]ode" },
+                { "<leader>d", group = "[D]AP" },
+                { "<leader>s", group = "[S]earch" },
                 { "<leader>f", group = "[F]ile" },
-                { "<leader>g", group = "[G]oto" },
-                { "<leader>t", group = "[T]odo" },
-                { "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
+                { "<leader>l", group = "[L]azygit" },
             },
+        },
+    },
+
+    {
+        "kdheepak/lazygit.nvim",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-telescope/telescope.nvim",
+        },
+        lazy = true,
+        cmd = {
+            "LazyGit",
+            "LazyGitConfig",
+            "LazyGitCurrentFile",
+            "LazyGitFilter",
+            "LazyGitFilterCurrentFile",
+        },
+        config = function()
+            require("telescope").load_extension("lazygit")
+        end,
+        keys = {
+            { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
+            { "<leader>lc", "<cmd>LazyGitConfig<cr>", desc = "LazyGit config" },
+            { "<leader>lf", "<cmd>LazyGitCurrentFile<cr>", desc = "LazyGit current file" },
         },
     },
 
@@ -136,48 +159,25 @@ require("lazy").setup({
 
             local builtin = require("telescope.builtin")
 
-            vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
-            vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
-            vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "[S]earch [F]iles" })
-            vim.keymap.set(
-                "n",
-                "<leader>ss",
-                builtin.builtin,
-                { desc = "[S]earch [S]elect Telescope" }
-            )
-            vim.keymap.set(
-                "n",
-                "<leader>sw",
-                builtin.grep_string,
-                { desc = "[S]earch current [W]ord" }
-            )
-            vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
-            vim.keymap.set(
-                "n",
-                "<leader>sd",
-                builtin.diagnostics,
-                { desc = "[S]earch [D]iagnostics" }
-            )
-            vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
-            vim.keymap.set(
-                "n",
-                "<leader>s.",
-                builtin.oldfiles,
-                { desc = '[S]earch Recent Files ("." for repeat)' }
-            )
-            vim.keymap.set(
-                "n",
-                "<leader><leader>",
-                builtin.buffers,
-                { desc = "[ ] Find existing buffers" }
-            )
-
-            vim.keymap.set("n", "<leader>s/", function()
+            local function set_keymap(binding, func, desc)
+                vim.keymap.set("n", "<leader>" .. binding, func, { desc = desc })
+            end
+            set_keymap("sh", builtin.help_tags, "[S]earch [H]elp")
+            set_keymap("sk", builtin.keymaps, "[S]earch [K]eymaps")
+            set_keymap("sf", builtin.find_files, "[S]earch [F]iles")
+            set_keymap("ss", builtin.builtin, "[S]earch [S]elect Telescope")
+            set_keymap("sw", builtin.grep_string, "[S]earch current [W]ord")
+            set_keymap("sg", builtin.live_grep, "[S]earch by [G]rep")
+            set_keymap("sd", builtin.diagnostics, "[S]earch [D]iagnostics")
+            set_keymap("sr", builtin.resume, "[S]earch [R]esume")
+            set_keymap("s.", builtin.oldfiles, '[S]earch Recent Files ("." for repeat)')
+            set_keymap("<leader>", builtin.buffers, "[ ] Find existing buffers")
+            set_keymap("s/", function()
                 builtin.live_grep({
                     grep_open_files = true,
                     prompt_title = "Live Grep in Open Files",
                 })
-            end, { desc = "[S]earch [/] in Open Files" })
+            end, "[S]earch [/] in Open Files")
         end,
     },
 
@@ -412,6 +412,11 @@ require("lazy").setup({
             -- formatter configuration for filetype
             formatters_by_ft = {
                 lua = { "stylua" },
+                css = { "prettierd" },
+                html = { "prettierd" },
+                javascriptreact = { "prettierd" },
+                typescriptreact = { "prettierd" },
+                typst = { "typstyle" },
             },
         },
     },
@@ -655,5 +660,20 @@ require("lazy").setup({
         "windwp/nvim-ts-autotag",
         dependencies = "nvim-treesitter/nvim-treesitter",
         opts = {},
+    },
+
+    {
+        "chomosuke/typst-preview.nvim",
+        lazy = false,
+        version = "1.*",
+        opts = {
+            dependencies_bin = {
+                ["tinymist"] = "tinymist",
+            },
+        },
+        cmd = {
+            "TypstPreviewToggle",
+            "TypstPreviewFollowCursorToggle",
+        },
     },
 })

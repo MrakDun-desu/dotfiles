@@ -15,6 +15,9 @@ indent_size = 2
 [*.gleam]
 indent_size = 2
 
+[*.typ]
+indent_size = 2
+
 # Web files
 [*.{html,jsx,tsx,yaml,yml,json,js,ts,css}]
 indent_size = 2

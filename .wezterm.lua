@@ -60,6 +60,11 @@ wezterm.on("format-tab-title", function(tab, _, _, _, hover, max_width)
     }
 end)
 
+wezterm.on("gui-startup", function(cmd)
+    local _, _, window = wezterm.mux.spawn_window(cmd or {})
+    window:gui_window():maximize()
+end)
+
 return {
     color_scheme = "catppuccin-mocha",
 
@@ -72,13 +77,6 @@ return {
     use_fancy_tab_bar = false,
     hide_tab_bar_if_only_one_tab = true,
     tab_max_width = 50,
-    tab_bar_style = {
-        active_tab_left = wezterm.format({
-            Background = { Color = "#0b0022" },
-            Foreground = { Color = "#2b2042" },
-            Text = SOLID_LEFT_ARROW,
-        }),
-    },
     colors = {
         tab_bar = {
             background = dark_bg,
