@@ -28,6 +28,8 @@ vim.o.cursorline = true
 vim.o.scrolloff = 20
 vim.o.confirm = true
 
+vim.o.winborder = "rounded"
+
 -------------------------------- Basic keymaps --------------------------------
 
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
@@ -404,7 +406,19 @@ require("lazy").setup({
                         end,
                     },
                 },
-                opts = {},
+                config = function()
+                    local luasnip = require("luasnip")
+                    vim.api.nvim_create_autocmd("ModeChanged", {
+                        pattern = "*:n",
+                        callback = function()
+                            if luasnip.in_snippet() then
+                                luasnip.unlink_current()
+                            end
+                        end,
+                        desc = "Clear snippet jump list when entering normal mode",
+                    })
+                    luasnip.setup({})
+                end,
             },
             "folke/lazydev.nvim",
         },
@@ -414,27 +428,21 @@ require("lazy").setup({
             keymap = {
                 preset = "default",
             },
-
             appearance = {
                 -- Adjusts spacing to ensure icons are aligned
                 nerd_font_variant = "normal",
             },
-
             completion = {
-                documentation = { auto_show = false, auto_show_delay_ms = 500 },
+                documentation = { auto_show = true, auto_show_delay_ms = 500 },
             },
-
             sources = {
                 default = { "lsp", "path", "snippets", "lazydev" },
                 providers = {
                     lazydev = { module = "lazydev.integrations.blink", score_offset = 100 },
                 },
             },
-
             snippets = { preset = "luasnip" },
-
             fuzzy = { implementation = "prefer_rust_with_warning" },
-
             signature = { enabled = true },
         },
     },
