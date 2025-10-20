@@ -2,16 +2,9 @@
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
-
 vim.o.number = true
 vim.o.mouse = "a"
 vim.o.showmode = false
-
--- shedule after startup to not slow down editor
-vim.schedule(function()
-    vim.o.clipboard = "unnamedplus"
-end)
-
 vim.o.breakindent = true
 vim.o.undofile = true
 vim.o.ignorecase = true
@@ -27,13 +20,17 @@ vim.o.inccommand = "nosplit"
 vim.o.cursorline = true
 vim.o.scrolloff = 20
 vim.o.confirm = true
-
 vim.o.winborder = "rounded"
+
+-- shedule after startup to not slow down editor
+vim.schedule(function()
+    vim.o.clipboard = "unnamedplus"
+end)
 
 -------------------------------- Basic keymaps --------------------------------
 
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
-vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
 vim.keymap.set("n", "j", "gj")
 vim.keymap.set("n", "k", "gk")
@@ -77,8 +74,6 @@ local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
 
 require("lazy").setup({
-    "nmac427/guess-indent.nvim",
-
     {
         "lewis6991/gitsigns.nvim",
         opts = {
@@ -200,7 +195,6 @@ require("lazy").setup({
         dependencies = {
             { "mason-org/mason.nvim", opts = {} },
             "mason-org/mason-lspconfig.nvim",
-            "WhoIsSethDaniel/mason-tool-installer.nvim",
             { "j-hui/fidget.nvim", opts = {} },
             "saghen/blink.cmp",
         },
@@ -297,15 +291,15 @@ require("lazy").setup({
                 virtual_text = {
                     source = "if_many",
                     spacing = 2,
-                    format = function(diagnostic)
-                        local diagnostic_message = {
-                            [vim.diagnostic.severity.ERROR] = diagnostic.message,
-                            [vim.diagnostic.severity.WARN] = diagnostic.message,
-                            [vim.diagnostic.severity.INFO] = diagnostic.message,
-                            [vim.diagnostic.severity.HINT] = diagnostic.message,
-                        }
-                        return diagnostic_message[diagnostic.severity]
-                    end,
+                    -- format = function(diagnostic)
+                    --     local diagnostic_message = {
+                    --         [vim.diagnostic.severity.ERROR] = diagnostic.message,
+                    --         [vim.diagnostic.severity.WARN] = diagnostic.message,
+                    --         [vim.diagnostic.severity.INFO] = diagnostic.message,
+                    --         [vim.diagnostic.severity.HINT] = diagnostic.message,
+                    --     }
+                    --     return diagnostic.message
+                    -- end,
                 },
             })
 
@@ -341,9 +335,8 @@ require("lazy").setup({
 
             -- only ensure that lua LSP and formatter are installed, everything else can get
             -- installed manually when I need it
-            require("mason-tool-installer").setup({ ensure_installed = { "lua_ls", "stylua" } })
             require("mason-lspconfig").setup({
-                ensure_installed = {},
+                ensure_installed = { "lua_ls", "stylua" },
                 automatic_installation = false,
                 automatic_enable = true,
                 handlers = {
@@ -360,6 +353,9 @@ require("lazy").setup({
                     end,
                 },
             })
+            if vim.fn.executable("gleam") == 1 then
+                vim.lsp.enable("gleam")
+            end
         end,
     },
 
@@ -375,9 +371,6 @@ require("lazy").setup({
             "nvim-treesitter/nvim-treesitter",
         },
         config = function()
-            if vim.fn.executable("gleam") == 1 then
-                vim.lsp.enable("gleam")
-            end
             require("godotdev").setup({
                 csharp = false,
             })
@@ -547,7 +540,6 @@ require("lazy").setup({
             })
             vim.keymap.set("n", "<leader>ft", Snacks.terminal.toggle, { desc = "Open terminal" })
             Snacks.setup({
-                lazygit = { enabled = true },
                 animate = { enabled = true },
                 rename = { enabled = true },
                 terminal = { enabled = true },
