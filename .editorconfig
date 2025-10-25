@@ -10,7 +10,7 @@ trim_trailing_whitespace = true
 max_line_length = 100
 
 [*.md]
-indent_size = 2
+indent_size = 3
 
 [*.gleam]
 indent_size = 2
@@ -220,6 +220,3 @@ cpp_space_around_ternary_operator = insert
 # wrapping
 cpp_wrap_preserve_blocks = one_liners
 
-[*.gd]
-indent_style = tab
-indent_size = 4

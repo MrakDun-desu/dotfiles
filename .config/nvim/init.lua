@@ -437,6 +437,7 @@ require("lazy").setup({
                 javascriptreact = { "prettierd" },
                 typescriptreact = { "prettierd" },
                 typst = { "typstyle" },
+                markdown = { "prettierd" },
             },
         },
     },
