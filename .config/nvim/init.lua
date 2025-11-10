@@ -470,17 +470,6 @@ require("lazy").setup({
             require("mini.notify").setup()
             require("mini.pairs").setup()
 
-            require("mini.files").setup({
-                mappings = {
-                    go_in_plus = "<Enter>",
-                },
-                windows = {
-                    preview = true,
-                    width_preview = 50,
-                },
-            })
-            vim.keymap.set("n", "<leader>e", MiniFiles.open, { desc = "Open files" })
-
             local statusline = require("mini.statusline")
             statusline.setup({ use_icons = true })
             ---@diagnostic disable-next-line: duplicate-set-field
@@ -534,9 +523,12 @@ require("lazy").setup({
         lazy = false,
         config = function()
             vim.api.nvim_create_autocmd("User", {
-                pattern = "MiniFilesActionRename",
+                pattern = "OilActionPost",
                 callback = function(event)
-                    Snacks.rename.on_rename_file(event.data.from, event.data.to)
+                    local action = event.data.actions[1]
+                    if action.type == "move" then
+                        Snacks.rename.on_rename_file(action.src_url, action.dest_url)
+                    end
                 end,
             })
             vim.keymap.set("n", "<leader>ft", Snacks.terminal.toggle, { desc = "Open terminal" })
@@ -547,6 +539,38 @@ require("lazy").setup({
                 bigfile = { enabled = true },
             })
         end,
+    },
+
+    {
+        "stevearc/oil.nvim",
+        ---@module 'oil'
+        ---@type oil.SetupOpts
+        opts = {
+            default_file_explorer = true,
+            columns = {
+                "icon",
+                "size",
+            },
+            skip_confirm_for_simple_edits = true,
+            lsp_file_methods = {
+                enabled = true,
+                autosave_changes = true,
+            },
+            watch_for_changes = true,
+            keymaps = {
+                ["g?"] = { "actions.show_help", mode = "n" },
+                ["g."] = { "actions.toggle_hidden", mode = "n" },
+                ["gx"] = "actions.open_external",
+                ["<CR>"] = "actions.select",
+                ["<C-p>"] = "actions.preview",
+                ["<C-c>"] = { "actions.close", mode = "n" },
+                ["h"] = { "actions.parent", mode = "n" },
+                ["l"] = "actions.select",
+            },
+            use_default_keymaps = false,
+        },
+        dependencies = { { "nvim-mini/mini.icons", opts = {} } },
+        lazy = false,
     },
 
     {
@@ -570,3 +594,17 @@ require("lazy").setup({
         },
     },
 })
+
+-- neovide settings
+vim.o.guifont = "FantasqueSansM Nerd Font:h11"
+vim.g.neovide_scale_factor = 1.0
+vim.g.neovide_cursor_trail_size = 0.2
+
+if vim.g.neovide then
+    vim.keymap.set("n", "<C-=>", function()
+        vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + 0.1
+    end)
+    vim.keymap.set("n", "<C-->", function()
+        vim.g.neovide_scale_factor = vim.g.neovide_scale_factor - 0.1
+    end)
+end
