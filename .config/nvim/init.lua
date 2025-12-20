@@ -40,7 +40,7 @@ vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right win
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
-vim.keymap.set("n", "<leader>fc", ":e ~/.config/nvim/init.lua<CR>", { desc = "Open nvim config" })
+vim.keymap.set("n", "<leader>fc", ":e ~/.config/nvim/init.lua<CR>", { desc = "Open [Config]" })
 
 vim.api.nvim_create_autocmd("TextYankPost", {
     desc = "Highlight when yanking text",
@@ -99,6 +99,7 @@ require("lazy").setup({
                 { "<leader>s", group = "[S]earch" },
                 { "<leader>f", group = "[F]ile" },
                 { "<leader>l", group = "[L]azygit" },
+                { "<leader>a", group = "[A]i Completion" },
             },
         },
     },
@@ -193,10 +194,42 @@ require("lazy").setup({
     {
         "neovim/nvim-lspconfig",
         dependencies = {
-            { "mason-org/mason.nvim", opts = {} },
             "mason-org/mason-lspconfig.nvim",
+            {
+                "saghen/blink.cmp",
+                dependencies = {
+                    {
+                        "Exafunction/windsurf.nvim",
+                        config = function()
+                            require("codeium").setup({
+                                enable_chat = true,
+                                enable_cmp_source = false,
+                                virtual_text = {
+                                    enabled = true,
+                                    manual = false,
+                                    map_keys = true,
+                                    key_bindings = {
+                                        accept = "<C-y>",
+                                        accept_word = false,
+                                        accept_line = false,
+                                        next = "<C-n>",
+                                        prev = "<C-p>",
+                                        clear = "<C-c>",
+                                    },
+                                },
+                            })
+                        end,
+                    },
+                },
+            },
+            { "mason-org/mason.nvim", opts = {} },
             { "j-hui/fidget.nvim", opts = {} },
-            "saghen/blink.cmp",
+            {
+                "Decodetalkers/csharpls-extended-lsp.nvim",
+                config = function()
+                    pcall(require("telescope").load_extension, "csharpls_definition")
+                end,
+            },
         },
         config = function()
             vim.api.nvim_create_autocmd("LspAttach", {
@@ -291,15 +324,6 @@ require("lazy").setup({
                 virtual_text = {
                     source = "if_many",
                     spacing = 2,
-                    -- format = function(diagnostic)
-                    --     local diagnostic_message = {
-                    --         [vim.diagnostic.severity.ERROR] = diagnostic.message,
-                    --         [vim.diagnostic.severity.WARN] = diagnostic.message,
-                    --         [vim.diagnostic.severity.INFO] = diagnostic.message,
-                    --         [vim.diagnostic.severity.HINT] = diagnostic.message,
-                    --     }
-                    --     return diagnostic.message
-                    -- end,
                 },
             })
 
@@ -331,6 +355,13 @@ require("lazy").setup({
                         },
                     },
                 },
+                csharp_ls = {
+                    handlers = {
+                        ["textDocument/definition"] = require("csharpls_extended").handler,
+                        ["textDocument/typeDefinition"] = require("csharpls_extended").handler,
+                    },
+                    cmd = { csharpls },
+                },
             }
 
             -- only ensure that lua LSP and formatter are installed, everything else can get
@@ -350,6 +381,7 @@ require("lazy").setup({
                         )
                         vim.lsp.config(server_name, server)
                         vim.lsp.enable({ server_name })
+                        require("csharpls_extended").buf_read_cmd_bind()
                     end,
                 },
             })
@@ -469,9 +501,20 @@ require("lazy").setup({
             require("mini.move").setup()
             require("mini.notify").setup()
             require("mini.pairs").setup()
+            require("mini.files").setup({
+                mappings = {
+                    go_in_plus = "<Enter>",
+                },
+                windows = {
+                    preview = true,
+                    width_preview = 80,
+                },
+            })
+
+            vim.keymap.set("n", "<leader>fe", MiniFiles.open, { desc = "File [E]xplorer" })
 
             local statusline = require("mini.statusline")
-            statusline.setup({ use_icons = true })
+            statusline.setup()
             ---@diagnostic disable-next-line: duplicate-set-field
             statusline.section_location = function()
                 return "%2l:%-2v"
@@ -531,7 +574,7 @@ require("lazy").setup({
                     end
                 end,
             })
-            vim.keymap.set("n", "<leader>ft", Snacks.terminal.toggle, { desc = "Open terminal" })
+            vim.keymap.set("n", "<leader>ft", Snacks.terminal.toggle, { desc = "Open [T]erminal" })
             Snacks.setup({
                 animate = { enabled = true },
                 rename = { enabled = true },
@@ -539,38 +582,6 @@ require("lazy").setup({
                 bigfile = { enabled = true },
             })
         end,
-    },
-
-    {
-        "stevearc/oil.nvim",
-        ---@module 'oil'
-        ---@type oil.SetupOpts
-        opts = {
-            default_file_explorer = true,
-            columns = {
-                "icon",
-                "size",
-            },
-            skip_confirm_for_simple_edits = true,
-            lsp_file_methods = {
-                enabled = true,
-                autosave_changes = true,
-            },
-            watch_for_changes = true,
-            keymaps = {
-                ["g?"] = { "actions.show_help", mode = "n" },
-                ["g."] = { "actions.toggle_hidden", mode = "n" },
-                ["gx"] = "actions.open_external",
-                ["<CR>"] = "actions.select",
-                ["<C-p>"] = "actions.preview",
-                ["<C-c>"] = { "actions.close", mode = "n" },
-                ["h"] = { "actions.parent", mode = "n" },
-                ["l"] = "actions.select",
-            },
-            use_default_keymaps = false,
-        },
-        dependencies = { { "nvim-mini/mini.icons", opts = {} } },
-        lazy = false,
     },
 
     {
@@ -592,6 +603,13 @@ require("lazy").setup({
             "TypstPreviewToggle",
             "TypstPreviewFollowCursorToggle",
         },
+    },
+
+    {
+        "kylechui/nvim-surround",
+        version = "^3.0.0",
+        event = "VeryLazy",
+        opts = {},
     },
 })
 

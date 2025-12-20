@@ -60,11 +60,6 @@ wezterm.on("format-tab-title", function(tab, _, _, _, hover, max_width)
     }
 end)
 
-wezterm.on("gui-startup", function(cmd)
-    local _, _, window = wezterm.mux.spawn_window(cmd or {})
-    window:gui_window():maximize()
-end)
-
 return {
     color_scheme = "catppuccin-mocha",
 
