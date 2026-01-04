@@ -40,7 +40,7 @@ vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right win
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
-vim.keymap.set("n", "<leader>fc", ":e ~/.config/nvim/init.lua<CR>", { desc = "Open [Config]" })
+vim.keymap.set("n", "<leader>fc", ":e ~/.config/nvim/init.lua<CR>", { desc = "Open [C]onfig" })
 
 vim.api.nvim_create_autocmd("TextYankPost", {
     desc = "Highlight when yanking text",
@@ -206,18 +206,35 @@ require("lazy").setup({
                                 enable_cmp_source = false,
                                 virtual_text = {
                                     enabled = true,
-                                    manual = false,
-                                    map_keys = true,
-                                    key_bindings = {
-                                        accept = "<C-y>",
-                                        accept_word = false,
-                                        accept_line = false,
-                                        next = "<C-n>",
-                                        prev = "<C-p>",
-                                        clear = "<C-c>",
-                                    },
+                                    manual = true,
+                                    map_keys = false,
                                 },
                             })
+                            local virt_text = require("codeium.virtual_text")
+                            vim.keymap.set(
+                                "i",
+                                "<C-y>",
+                                virt_text.accept,
+                                { desc = "Codeium Accept" }
+                            )
+                            vim.keymap.set(
+                                "i",
+                                "<C-n>",
+                                virt_text.cycle_or_complete,
+                                { desc = "Codeium Cycle or Complete" }
+                            )
+                            vim.keymap.set(
+                                "i",
+                                "<C-p>",
+                                virt_text.accept,
+                                { desc = "Codeium Cycle Back" }
+                            )
+                            vim.keymap.set(
+                                "i",
+                                "<C-c>",
+                                virt_text.accept,
+                                { desc = "Codeium Clear" }
+                            )
                         end,
                     },
                 },
@@ -360,7 +377,6 @@ require("lazy").setup({
                         ["textDocument/definition"] = require("csharpls_extended").handler,
                         ["textDocument/typeDefinition"] = require("csharpls_extended").handler,
                     },
-                    cmd = { csharpls },
                 },
             }
 
@@ -381,7 +397,9 @@ require("lazy").setup({
                         )
                         vim.lsp.config(server_name, server)
                         vim.lsp.enable({ server_name })
-                        require("csharpls_extended").buf_read_cmd_bind()
+                        if server_name == "csharp_ls" then
+                            require("csharpls_extended").buf_read_cmd_bind()
+                        end
                     end,
                 },
             })

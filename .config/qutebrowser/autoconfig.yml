@@ -9,17 +9,12 @@ settings:
   colors.webpage.darkmode.contrast:
     global: -0.1
   colors.webpage.darkmode.enabled:
-    global: true
+    global: false
   content.notifications.enabled:
     https://mail.proton.me: true
   content.register_protocol_handler:
     https://mail.proton.me#mailto=%25s: true
-  editor.command:
-    global:
-    - ghostty
-    - -e
-    - nvim
-    - -f
-    - '{file}'
-    - -c
-    - normal {line}G{column0}l
+  url.default_page:
+    global: startpage.com
+  url.start_pages:
+    global: https://startpage.com

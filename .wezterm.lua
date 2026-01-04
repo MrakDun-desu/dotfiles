@@ -26,6 +26,11 @@ local hover_fg = "#909090"
 local active_bg = "#2b2042"
 local active_fg = "#c0c0c0"
 
+wezterm.on("gui-startup", function(cmd)
+    local _, _, window = wezterm.mux.spawn_window(cmd or {})
+    window:gui_window():maximize()
+end)
+
 wezterm.on("format-tab-title", function(tab, _, _, _, hover, max_width)
     local edge_background = dark_bg
     local background = inactive_bg
