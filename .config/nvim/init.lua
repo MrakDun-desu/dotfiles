@@ -395,11 +395,11 @@ require("lazy").setup({
                             capabilities,
                             server.capabilities or {}
                         )
-                        vim.lsp.config(server_name, server)
-                        vim.lsp.enable({ server_name })
                         if server_name == "csharp_ls" then
                             require("csharpls_extended").buf_read_cmd_bind()
                         end
+                        vim.lsp.config(server_name, server)
+                        vim.lsp.enable({ server_name })
                     end,
                 },
             })
