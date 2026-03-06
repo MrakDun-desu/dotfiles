@@ -16,9 +16,8 @@ vim.o.splitright = true
 vim.o.splitbelow = true
 vim.o.list = true
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
-vim.o.inccommand = "nosplit"
 vim.o.cursorline = true
-vim.o.scrolloff = 20
+vim.o.scrolloff = 15
 vim.o.confirm = true
 vim.o.winborder = "rounded"
 
@@ -48,6 +47,26 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function()
         vim.hl.on_yank()
     end,
+})
+
+-- diagnostics
+vim.diagnostic.config({
+    severity_sort = true,
+    float = { border = "rounded", source = "if_many" },
+    underline = { severity = vim.diagnostic.severity.WARN },
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = "󰅚 ",
+            [vim.diagnostic.severity.WARN] = "󰀪 ",
+            [vim.diagnostic.severity.INFO] = "󰋽 ",
+            [vim.diagnostic.severity.HINT] = "󰌶 ",
+        },
+    },
+    virtual_text = {
+        source = "if_many",
+        spacing = 2,
+    },
+    jump = { float = true },
 })
 
 ------------------------------- Package manager -------------------------------
@@ -99,7 +118,6 @@ require("lazy").setup({
                 { "<leader>s", group = "[S]earch" },
                 { "<leader>f", group = "[F]ile" },
                 { "<leader>l", group = "[L]azygit" },
-                { "<leader>a", group = "[A]i Completion" },
             },
         },
     },
@@ -130,6 +148,7 @@ require("lazy").setup({
 
     {
         "nvim-telescope/telescope.nvim",
+        enabled = true,
         event = "VimEnter",
         dependencies = {
             "nvim-lua/plenary.nvim",
@@ -170,83 +189,18 @@ require("lazy").setup({
             set_keymap("sr", builtin.resume, "[S]earch [R]esume")
             set_keymap("s.", builtin.oldfiles, '[S]earch Recent Files ("." for repeat)')
             set_keymap("<leader>", builtin.buffers, "[ ] Find existing buffers")
-            set_keymap("s/", function()
-                builtin.live_grep({
-                    grep_open_files = true,
-                    prompt_title = "Live Grep in Open Files",
-                })
-            end, "[S]earch [/] in Open Files")
         end,
     },
 
     --------------------------------- LSP plugins ---------------------------------
 
     {
-        "folke/lazydev.nvim",
-        ft = "lua",
-        opts = {
-            library = {
-                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-            },
-        },
-    },
-
-    {
         "neovim/nvim-lspconfig",
         dependencies = {
             "mason-org/mason-lspconfig.nvim",
-            {
-                "saghen/blink.cmp",
-                dependencies = {
-                    {
-                        "Exafunction/windsurf.nvim",
-                        config = function()
-                            require("codeium").setup({
-                                enable_chat = true,
-                                enable_cmp_source = false,
-                                virtual_text = {
-                                    enabled = true,
-                                    manual = true,
-                                    map_keys = false,
-                                },
-                            })
-                            local virt_text = require("codeium.virtual_text")
-                            vim.keymap.set(
-                                "i",
-                                "<C-y>",
-                                virt_text.accept,
-                                { desc = "Codeium Accept" }
-                            )
-                            vim.keymap.set(
-                                "i",
-                                "<C-n>",
-                                virt_text.cycle_or_complete,
-                                { desc = "Codeium Cycle or Complete" }
-                            )
-                            vim.keymap.set(
-                                "i",
-                                "<C-p>",
-                                virt_text.accept,
-                                { desc = "Codeium Cycle Back" }
-                            )
-                            vim.keymap.set(
-                                "i",
-                                "<C-c>",
-                                virt_text.accept,
-                                { desc = "Codeium Clear" }
-                            )
-                        end,
-                    },
-                },
-            },
+            "saghen/blink.cmp",
             { "mason-org/mason.nvim", opts = {} },
             { "j-hui/fidget.nvim", opts = {} },
-            {
-                "Decodetalkers/csharpls-extended-lsp.nvim",
-                config = function()
-                    pcall(require("telescope").load_extension, "csharpls_definition")
-                end,
-            },
         },
         config = function()
             vim.api.nvim_create_autocmd("LspAttach", {
@@ -276,10 +230,7 @@ require("lazy").setup({
                     local client = vim.lsp.get_client_by_id(event.data.client_id)
                     if
                         client
-                        and client:supports_method(
-                            vim.lsp.protocol.Methods.textDocument_documentHighlight,
-                            event.buf
-                        )
+                        and client:supports_method("textDocument/documentHighlight", event.buf)
                     then
                         local highlight_group =
                             vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
@@ -310,10 +261,7 @@ require("lazy").setup({
                     if
                         client
                         and (
-                            client:supports_method(
-                                vim.lsp.protocol.Methods.textDocument_inlayHint,
-                                event.buf
-                            )
+                            client:supports_method("textDocument/inlayHint", event.buf)
                             or client.name == "omnisharp"
                         )
                     then
@@ -326,24 +274,6 @@ require("lazy").setup({
                 end,
             })
 
-            vim.diagnostic.config({
-                severity_sort = true,
-                float = { border = "rounded", source = "if_many" },
-                underline = { severity = vim.diagnostic.severity.ERROR },
-                signs = {
-                    text = {
-                        [vim.diagnostic.severity.ERROR] = "󰅚 ",
-                        [vim.diagnostic.severity.WARN] = "󰀪 ",
-                        [vim.diagnostic.severity.INFO] = "󰋽 ",
-                        [vim.diagnostic.severity.HINT] = "󰌶 ",
-                    },
-                },
-                virtual_text = {
-                    source = "if_many",
-                    spacing = 2,
-                },
-            })
-
             local capabilities = require("blink.cmp").get_lsp_capabilities()
 
             -- if I want to override individual server settings, do it here
@@ -351,8 +281,22 @@ require("lazy").setup({
                 lua_ls = {
                     settings = {
                         Lua = {
-                            completion = {
-                                callSnippet = "Replace",
+                            runtime = {
+                                version = "LuaJIT",
+                                path = { "lua/?.lua", "lua/?/init.lua" },
+                            },
+                            workspace = {
+                                checkThirdParty = false,
+                                library = vim.list_extend(
+                                    vim.api.nvim_get_runtime_file("", true),
+                                    {
+                                        "${3rd}/luv/library",
+                                        "${3rd}/busted/library",
+                                    }
+                                ),
+                            },
+                            diagnostics = {
+                                globals = { "vim" },
                             },
                         },
                     },
@@ -372,40 +316,20 @@ require("lazy").setup({
                         },
                     },
                 },
-                csharp_ls = {
-                    handlers = {
-                        ["textDocument/definition"] = require("csharpls_extended").handler,
-                        ["textDocument/typeDefinition"] = require("csharpls_extended").handler,
-                    },
-                },
+                gleam = {},
             }
 
-            -- only ensure that lua LSP and formatter are installed, everything else can get
-            -- installed manually when I need it
+            for server_name, server_config in pairs(servers) do
+                server_config.capabilities =
+                    vim.tbl_deep_extend("force", {}, capabilities, server_config.capabilities or {})
+                vim.lsp.config(server_name, server_config)
+            end
+
             require("mason-lspconfig").setup({
                 ensure_installed = { "lua_ls", "stylua" },
                 automatic_installation = false,
                 automatic_enable = true,
-                handlers = {
-                    function(server_name)
-                        local server = servers[server_name] or {}
-                        server.capabilities = vim.tbl_deep_extend(
-                            "force",
-                            {},
-                            capabilities,
-                            server.capabilities or {}
-                        )
-                        if server_name == "csharp_ls" then
-                            require("csharpls_extended").buf_read_cmd_bind()
-                        end
-                        vim.lsp.config(server_name, server)
-                        vim.lsp.enable({ server_name })
-                    end,
-                },
             })
-            if vim.fn.executable("gleam") == 1 then
-                vim.lsp.enable("gleam")
-            end
         end,
     },
 
@@ -431,9 +355,6 @@ require("lazy").setup({
         "saghen/blink.cmp",
         event = "VimEnter",
         version = "1.*",
-        dependencies = {
-            "folke/lazydev.nvim",
-        },
         --- @module 'blink.cmp'
         --- @type blink.cmp.Config
         opts = {
@@ -441,17 +362,13 @@ require("lazy").setup({
                 preset = "default",
             },
             appearance = {
-                -- Adjusts spacing to ensure icons are aligned
                 nerd_font_variant = "normal",
             },
             completion = {
                 documentation = { auto_show = true, auto_show_delay_ms = 500 },
             },
             sources = {
-                default = { "lsp", "path", "snippets", "lazydev" },
-                providers = {
-                    lazydev = { module = "lazydev.integrations.blink", score_offset = 100 },
-                },
+                default = { "lsp", "path", "snippets" },
             },
             snippets = { preset = "default" },
             fuzzy = { implementation = "prefer_rust_with_warning" },
@@ -488,6 +405,7 @@ require("lazy").setup({
                 typescriptreact = { "prettierd" },
                 typst = { "typstyle" },
                 markdown = { "prettierd" },
+                json = { "biome" },
             },
         },
     },
@@ -515,7 +433,6 @@ require("lazy").setup({
         "echasnovski/mini.nvim",
         config = function()
             require("mini.ai").setup({ n_lines = 500 })
-            require("mini.surround").setup()
             require("mini.move").setup()
             require("mini.notify").setup()
             require("mini.pairs").setup()
@@ -529,7 +446,12 @@ require("lazy").setup({
                 },
             })
 
-            vim.keymap.set("n", "<leader>fe", MiniFiles.open, { desc = "File [E]xplorer" })
+            vim.keymap.set(
+                "n",
+                "<leader>fe",
+                require("mini.files").open,
+                { desc = "File [E]xplorer" }
+            )
 
             local statusline = require("mini.statusline")
             statusline.setup()
@@ -542,17 +464,16 @@ require("lazy").setup({
 
     {
         "nvim-treesitter/nvim-treesitter",
+        lazy = false,
         build = ":TSUpdate",
-        main = "nvim-treesitter.configs",
-        opts = {
-            auto_install = true,
-            highlight = {
-                enable = true,
-            },
-            indent = {
-                enable = true,
-            },
-        },
+        config = function()
+            require("nvim-treesitter").setup({
+                ensure_installed = { "lua", "luadoc", "html", "markdown", "bash" },
+                auto_install = true,
+                highlight = { enable = true },
+                indent = { enable = true },
+            })
+        end,
     },
 
     {

@@ -1,4 +1,13 @@
+## AUR
+
 an-anime-game-laucher-bin
+python-gdtoolkit
+tetrio-desktop
+vesktop-bin
+zen-browser-bin
+
+## Official
+
 aspnet-runtime
 aspnet-targeting-pack
 audacity
@@ -20,8 +29,8 @@ git
 git-delta
 github-cli
 godot
+gwenview
 haruna
-htop
 inkscape
 kalk
 kdeconnect
@@ -39,17 +48,13 @@ noto-fonts-extra
 npm
 ollama
 partitionmanager
-python-gdtoolkit
 qutebrowser
 reflector
 steam
 stow
 syncthing
-tetrio-desktop
 ttf-fantasque-nerd
 typst
-vesktop-bin
-vim
 vkd3d
 vulkan-radeon
 wezterm
@@ -58,4 +63,3 @@ xf86-video-amdgpu
 xf86-video-ati
 yakuake
 yazi
-zen-browser-bin

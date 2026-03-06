@@ -25,3 +25,4 @@ function y
 end
 
 set -gx PATH $PATH $HOME/.dotnet/tools
+/usr/bin/mise activate fish | source
