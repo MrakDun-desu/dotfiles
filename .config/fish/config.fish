@@ -6,11 +6,11 @@ function fish_greeting
     fastfetch
 end
 
-alias ls='eza -la --color=always --group-directories-first --icons'
-alias lt='eza -lT --color=always --group-directories-first --icons'
+alias ls='eza -la --color=always --group-directories-first --icons=always'
+alias lt='eza -lT --color=always --group-directories-first --icons=always'
 
 function cd
-    builtin cd $argv && eza -la --color=always --group-directories-first --icons
+    builtin cd $argv && ls
 end
 
 set -gx EDITOR nvim
@@ -25,4 +25,3 @@ function y
 end
 
 set -gx PATH $PATH $HOME/.dotnet/tools
-/usr/bin/mise activate fish | source

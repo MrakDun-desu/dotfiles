@@ -1,0 +1,10 @@
+// ────────────── Startup Applications ──────────────
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Miscellaneous#spawn-sh-at-startup
+
+    spawn-sh-at-startup "noctalia"
+    spawn-sh-at-startup "dbus-update-activation-environment --systemd"
+    spawn-sh-at-startup "udiskie --tray"
+    spawn-sh-at-startup "easyeffects --hide-window --service-mode"
+    spawn-sh-at-startup "nextcloud --background"
+    spawn-at-startup "zen-browser"
+    spawn-at-startup "vesktop"
