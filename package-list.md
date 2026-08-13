@@ -1,65 +1,45 @@
 ## AUR
 
 an-anime-game-laucher-bin
-python-gdtoolkit
 tetrio-desktop
 vesktop-bin
 zen-browser-bin
 
 ## Official
 
-aspnet-runtime
-aspnet-targeting-pack
 audacity
 bat
 calibre
 docker
 docker-buildx
 docker-compose
-dotnet-runtime
-dotnet-sdk
-drawio-desktop
 eza
 fastfetch
 fd
 fish
 fzf
 gamemode
+ghostty
 git
 git-delta
 github-cli
-godot
-gwenview
-haruna
-inkscape
-kalk
-kdeconnect
-krita
-ktorrent
 lazygit
 lib32-vkd3d
 libreoffice-still
-luarocks
 mission-center
-neovide
 neovim
 noto-fonts-cjk
 noto-fonts-extra
 npm
-ollama
 partitionmanager
-qutebrowser
-reflector
 steam
 stow
 syncthing
 ttf-fantasque-nerd
-typst
 vkd3d
 vulkan-radeon
-wezterm
 wl-clipboard
 xf86-video-amdgpu
 xf86-video-ati
-yakuake
 yazi
+zed
