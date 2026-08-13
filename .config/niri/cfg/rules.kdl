@@ -9,7 +9,7 @@
     }
 
     window-rule {
-        geometry-corner-radius 20
+        geometry-corner-radius 16
         clip-to-geometry true
         open-maximized true
         open-focused true
