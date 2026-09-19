@@ -1,21 +1,42 @@
-// ────────────── Output Configuration ──────────────
-// You can run `niri msg outputs` to get the correct name for your displays.
-// You will have to remove "/-" and edit it before it takes effect.
-// https://github.com/YaLTeR/niri/wiki/Configuration:-Outputs
-
+// main monitor - has issues because of the 4k size
+// default mode - 4k 100hz, usable only with 1 monitor connected
 output "DP-1" {
-    mode "1920x1080@74.986"
-    variable-refresh-rate on-demand=true
+    mode "3840x2160@100.001"
+    scale 1.5
     position x=0 y=0
 }
+// mode for using with the graphics tablet
+// output "DP-1" {
+//     mode "3840x2160@60.000"
+//     scale 1.5
+//     position x=0 y=0
+// }
+// Mode for the maximum refresh rate (only usable at 1080p).
+// When using this mode, also need to reconfigure other monitors' positions
+// output "DP-1" {
+//     mode "1920x1080@360.000"
+//     scale 1
+//     position x=0 y=0
+// }
+// output "DP-2" {
+//     mode "1920x1080@100.087"
+//     position x=1920 y=0
+// }
+// output "HDMI-A-1" {
+//     mode "1920x1080@60.000"
+//     position x=1920 y=1080
+//     scale 1.0
+// }
 
+// secondary monitor - no issues
 output "DP-2" {
-    mode "1920x1080@144.001"
-    variable-refresh-rate on-demand=true
-    position x=1920 y=0
+    mode "1920x1080@100.087"
+    position x=2560 y=180
 }
 
+// tablet monitor
 output "HDMI-A-1" {
-    position x=1920 y=1080
+    mode "1920x1080@60.000"
+    position x=2560 y=1260
     scale 1.0
 }

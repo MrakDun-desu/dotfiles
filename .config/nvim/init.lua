@@ -71,6 +71,10 @@ vim.diagnostic.config({
     jump = { float = true },
 })
 
+if vim.g.vscode then
+    return
+end
+
 ------------------------------- Package manager -------------------------------
 do
     -- [[ Intro to `vim.pack` ]]

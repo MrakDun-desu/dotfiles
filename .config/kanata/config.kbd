@@ -1,0 +1,15 @@
+;; alias for tap meaning esc and hold meaning ctrl
+(defalias
+  escctrl (tap-hold 100 100 esc lctrl)
+)
+
+;; source keys - these keys will be mapped
+(defsrc
+  caps
+)
+
+;; target actions - these actions will be bound to the source keys
+;; first argument is just the layer of the base
+(deflayer base
+    @escctrl
+)

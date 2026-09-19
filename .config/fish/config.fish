@@ -3,7 +3,7 @@ if not status is-interactive
 end
 
 function fish_greeting
-    fastfetch
+    fastfetch --logo "$HOME/Pictures/Pfps/mari_no_bg.png"
 end
 
 alias ls='eza -la --color=always --group-directories-first --icons=always'

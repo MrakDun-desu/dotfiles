@@ -2,8 +2,8 @@
     defaultBranch = main
 
 [user]
-    name = MrakDundesu
-    email = m.danco@protonmail.com
+    name = Marek Danco
+    email = m.danco42@gmail.com
 
 [core]
     editor = nvim
@@ -23,8 +23,10 @@
     colorMoved = default
 
 [credential "https://github.com"]
-	helper = 
+	helper =
 	helper = !/usr/bin/gh auth git-credential
 [credential "https://gist.github.com"]
-	helper = 
+	helper =
 	helper = !/usr/bin/gh auth git-credential
+[pull]
+	rebase = false

@@ -1,5 +1,35 @@
 {
-  "diff_view_style": "split",
+  "language_models": {
+    "openai_compatible": {
+      "Lemonade": {
+        "api_url": "http://localhost:13305/api/v1",
+        "available_models": [
+          {
+            "name": "Qwen3-Coder-30B-A3B-Instruct-GGUF-Q3_K_M",
+            "max_tokens": 200000,
+            "max_output_tokens": 32000,
+            "max_completion_tokens": 200000,
+            "capabilities": {
+              "tools": true,
+              "images": false,
+              "parallel_tool_calls": false,
+              "prompt_cache_key": false,
+              "chat_completions": true,
+              "interleaved_reasoning": false,
+              "max_tokens_parameter": false
+            }
+          }
+        ]
+      }
+    }
+  },
+  "completion_menu_item_kind": "symbol",
+  "cli_default_open_behavior": "existing_window",
+  "show_edit_predictions": false,
+  "edit_predictions": {
+    "provider": "copilot"
+  },
+  "diff_view_style": "unified",
   "which_key": {
     "delay_ms": 500,
     "enabled": true
@@ -13,7 +43,7 @@
   "buffer_font_family": "FantasqueSansM Nerd Font",
   "terminal": {
     "font_family": "FantasqueSansM Nerd Font",
-    "font_size": 14.0
+    "font_size": 12.0
   },
   "agent_servers": {
     "github-copilot-cli": {
@@ -33,6 +63,12 @@
     "dock": "left"
   },
   "agent": {
+    "default_profile": "ask",
+    "default_model": {
+      "provider": "Lemonade",
+      "model": "Qwen3-Coder-30B-A3B-Instruct-GGUF-Q3_K_M",
+      "enable_thinking": false
+    },
     "dock": "right",
     "favorite_models": [],
     "model_parameters": []
@@ -48,7 +84,7 @@
     "dark": "Catppuccin Mocha"
   },
   "ui_font_size": 15.0,
-  "buffer_font_size": 14.0,
+  "buffer_font_size": 13.0,
   "theme": {
     "mode": "dark",
     "light": "One Light",
@@ -80,9 +116,10 @@
     "TypeScript": {
       "hard_tabs": true,
       "tab_size": 3,
-      "formatter": {
-        "language_server": { "name": "oxfmt" }
-      }
+      "formatter": [
+        { "code_action": "source.organizeImports" },
+        { "language_server": { "name": "oxfmt" } }
+      ]
     },
     "Svelte": {
       "hard_tabs": true,
