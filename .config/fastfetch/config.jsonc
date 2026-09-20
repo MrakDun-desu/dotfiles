@@ -3,7 +3,8 @@
     "logo": {
         "padding": {
             "top": 2
-        }
+        },
+        "source": "/home/mrak/Pictures/Pfps/mari_no_bg.png"
     },
     "modules": [
         "title",

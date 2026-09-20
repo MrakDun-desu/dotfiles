@@ -1,45 +1,55 @@
-## AUR
+## Before others
 
-an-anime-game-laucher-bin
-tetrio-desktop
-vesktop-bin
-zen-browser-bin
+git
+github-cli
+stow
 
-## Official
+## Official (some only on Cachy)
 
 audacity
 bat
+btop
+bun
 calibre
+code
 docker
 docker-buildx
 docker-compose
+easyeffects
 eza
 fastfetch
 fd
+filelight
+flatseal
 fish
 fzf
 gamemode
 ghostty
-git
 git-delta
-github-cli
+gwenview
+haruna
+joplin-desktop
+lact
 lazygit
-lib32-vkd3d
 libreoffice-still
 mission-center
 neovim
-noto-fonts-cjk
-noto-fonts-extra
-npm
-partitionmanager
+nextcloud-client
+ripgrep
 steam
-stow
 syncthing
+tree-sitter-cli
 ttf-fantasque-nerd
 vkd3d
 vulkan-radeon
+vesktop-bin
 wl-clipboard
-xf86-video-amdgpu
-xf86-video-ati
+yakuake
 yazi
 zed
+zen-browser-bin
+
+## AUR
+
+an-anime-game-laucher-bin
+tetrio-desktop
