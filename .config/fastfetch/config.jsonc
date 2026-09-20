@@ -4,7 +4,10 @@
         "padding": {
             "top": 2
         },
-        "source": "/home/mrak/Pictures/Pfps/mari_no_bg.png"
+        "source": "$HOME/Pictures/Pfps/mari_no_bg.png",
+        "type": "auto",
+        "height": 25,
+        "width": 62
     },
     "modules": [
         "title",
