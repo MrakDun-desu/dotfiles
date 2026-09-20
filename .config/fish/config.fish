@@ -25,3 +25,5 @@ function y
 end
 
 set -gx PATH $PATH $HOME/.dotnet/tools
+
+source (/usr/bin/starship init fish --print-full-init | psub)
