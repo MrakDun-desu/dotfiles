@@ -17,13 +17,14 @@ function M.setup()
     base0C = '#bb8af4',
     base0D = '#8192fd',
     base0E = '#ed91d4',
-    base0F = '#c8043a',
+    base0F = '#f4bde5',
   })
 
   local hi = function(group, opts)
     vim.api.nvim_set_hl(0, group, opts)
   end
 
+  -- telescope.nvim
   hi('TelescopeNormal',         { fg = '#cdd6f4',          bg = '#1e1e2e' })
   hi('TelescopeBorder',         { fg = '#6c7086',             bg = '#1e1e2e' })
   hi('TelescopePromptNormal',   { fg = '#cdd6f4',          bg = '#1e1e2e' })
@@ -36,16 +37,34 @@ function M.setup()
   hi('TelescopeSelection',      { fg = '#cdd6f4',          bg = '#3a3b50' })
   hi('TelescopeSelectionCaret', { fg = '#b4befe',             bg = '#3a3b50' })
   hi('TelescopeMatching',       { fg = '#b4befe',             bold = true })
+
+  -- mini.pick
+  hi('MiniPickNormal',         { fg = '#cdd6f4',          bg = '#1e1e2e' })
+  hi('MiniPickBorder',         { fg = '#6c7086',             bg = '#1e1e2e' })
+  hi('MiniPickPrompt',   { fg = '#cdd6f4',          bg = '#1e1e2e' })
+  hi('MiniPickPromptPrefix',   { fg = '#b4befe',             bg = '#1e1e2e' })
+  hi('MiniPickBorderText',    { fg = '#1e1e2e',             bg = '#b4befe' })
+  hi('MiniPickMatchCurrent',      { fg = '#cdd6f4',          bg = '#3a3b50' })
+  hi('MiniPickPromptCaret', { fg = '#b4befe',             bg = '#3a3b50' })
+  hi('MiniPickMatchRanges',       { fg = '#b4befe',             bold = true })
 end
 
- -- Register a signal handler for SIGUSR1 (matugen updates)
- local signal = vim.uv.new_signal()
- signal:start(
-   'sigusr1',
-   vim.schedule_wrap(function()
-     package.loaded['matugen'] = nil
-     require('matugen').setup()
-   end)
- )
+-- Register a signal handler for SIGUSR1 (matugen updates).
+-- The handler re-requires this module, which re-runs the code below, so the
+-- previous handle is stopped first; otherwise handlers double on every signal.
+if _G.__matugen_signal then
+  _G.__matugen_signal:stop()
+  _G.__matugen_signal:close()
+end
 
- return M
+local signal = vim.uv.new_signal()
+_G.__matugen_signal = signal
+signal:start(
+  'sigusr1',
+  vim.schedule_wrap(function()
+    package.loaded['matugen'] = nil
+    require('matugen').setup()
+  end)
+)
+
+return M

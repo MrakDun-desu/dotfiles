@@ -159,11 +159,13 @@ do
         },
     })
 
-    vim.pack.add({ gh("catppuccin/nvim") })
-    require("catppuccin").setup({
-        flavour = "mocha",
-    })
-    vim.cmd.colorscheme("catppuccin")
+    -- vim.pack.add({ gh("catppuccin/nvim") })
+    -- require("catppuccin").setup({
+    --     flavour = "mocha",
+    -- })
+    -- vim.cmd.colorscheme("catppuccin")
+
+    vim.pack.add({ gh("RRethy/base16-nvim") })
 
     vim.pack.add({ gh("folke/which-key.nvim") })
     require("which-key").setup({
@@ -616,3 +618,11 @@ do
         end,
     })
 end
+
+local ok, matugen = pcall(require, "matugen")
+if ok then
+    matugen.setup()
+end
+
+local ok, matugen = pcall(require, 'matugen')
+if ok then matugen.setup() end

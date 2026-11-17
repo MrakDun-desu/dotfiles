@@ -74,6 +74,10 @@
         open-fullscreen true
     }
     window-rule {
+        match app-id="Tk"
+        open-floating true
+    }
+    window-rule {
         // tetrio plus has this title when it starts,
         // unlike tetrio itself which just has the title TETR.IO
         match title="tetrio-desktop"
