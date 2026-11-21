@@ -1,11 +1,13 @@
 {
+  "base_keymap": "VSCode",
+
   "language_models": {
     "openai_compatible": {
       "Lemonade": {
         "api_url": "http://localhost:13305/api/v1",
         "available_models": [
           {
-            "name": "Qwen3-Coder-30B-A3B-Instruct-GGUF-Q3_K_M",
+            "name": "Qwen3-Coder-30B-A3B-Instruct-GGUF",
             "max_tokens": 200000,
             "max_output_tokens": 32000,
             "max_completion_tokens": 200000,
@@ -23,28 +25,37 @@
       }
     }
   },
+
   "completion_menu_item_kind": "symbol",
+
   "cli_default_open_behavior": "existing_window",
+
   "show_edit_predictions": false,
-  "edit_predictions": {
-    "provider": "copilot"
-  },
+
   "diff_view_style": "unified",
+
   "which_key": {
     "delay_ms": 500,
     "enabled": true
   },
+
   "vim": {
     "use_smartcase_find": true
   },
+
   "show_signature_help_after_edits": false,
+
   "auto_signature_help": true,
+
   "ui_font_family": "Cantarell",
+
   "buffer_font_family": "FantasqueSansM Nerd Font",
+
   "terminal": {
     "font_family": "FantasqueSansM Nerd Font",
     "font_size": 12.0
   },
+
   "agent_servers": {
     "github-copilot-cli": {
       "default_config_options": {
@@ -53,89 +64,56 @@
       "type": "registry"
     }
   },
+
   "project_panel": {
     "dock": "left"
   },
+
   "outline_panel": {
     "dock": "left"
   },
+
   "collaboration_panel": {
     "dock": "left"
   },
+
   "agent": {
     "default_profile": "ask",
     "default_model": {
       "provider": "Lemonade",
-      "model": "Qwen3-Coder-30B-A3B-Instruct-GGUF-Q3_K_M",
+      "model": "Qwen3-Coder-30B-A3B-Instruct-GGUF",
       "enable_thinking": false
     },
     "dock": "right",
     "favorite_models": [],
     "model_parameters": []
   },
+
   "git_panel": {
     "tree_view": true,
     "dock": "left"
   },
+
   "vim_mode": true,
+
   "icon_theme": {
     "mode": "dark",
     "light": "Catppuccin Mocha",
     "dark": "Catppuccin Mocha"
   },
+
   "ui_font_size": 15.0,
+
   "buffer_font_size": 13.0,
+
   "theme": {
     "mode": "dark",
     "light": "One Light",
     "dark": "Catppuccin Mocha"
   },
+
   "format_on_save": "on",
-  "languages": {
-    "YAML": {
-      "formatter": {
-        "language_server": { "name": "oxfmt" }
-      }
-    },
-    "JSON": {
-      "hard_tabs": true,
-      "tab_size": 4,
-      "formatter": {
-        "language_server": { "name": "oxfmt" }
-      }
-    },
-    "JSONC": {
-      "hard_tabs": true,
-      "tab_size": 4,
-      "formatter": {
-        "language_server": {
-          "name": "oxfmt"
-        }
-      }
-    },
-    "TypeScript": {
-      "hard_tabs": true,
-      "tab_size": 3,
-      "formatter": [
-        { "code_action": "source.organizeImports" },
-        { "language_server": { "name": "oxfmt" } }
-      ]
-    },
-    "Svelte": {
-      "hard_tabs": true,
-      "tab_size": 3,
-      "formatter": {
-        "language_server": { "name": "oxfmt" }
-      }
-    },
-    "Markdown": {
-      "hard_tabs": false,
-      "tab_size": 3,
-      "formatter": {
-        "language_server": { "name": "oxfmt" }
-      }
-    }
-  },
+
   "lsp": {
     "vtsls": {
       "settings": {
@@ -144,6 +122,7 @@
             "enabled": "always"
           }
         },
+
         "javascript": {
           "updateImportsOnFileMove": {
             "enabled": "always"
@@ -152,13 +131,17 @@
       },
       "enable_lsp_tasks": true
     },
+
     "eslint": {
       "settings": {
         "onIgnoredFiles": "off"
       }
     }
   },
+
   "semantic_tokens": "combined",
+
   "show_whitespaces": "all",
+
   "vertical_scroll_margin": 10
 }

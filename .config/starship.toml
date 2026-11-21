@@ -14,7 +14,6 @@ $c\
 $rust\
 $golang\
 $nodejs\
-$bun\
 $php\
 $java\
 $kotlin\
@@ -90,11 +89,6 @@ symbol = ""
 style = "bg:green"
 format = '[[ $symbol( $version) ](fg:crust bg:green)]($style)'
 
-[bun]
-symbol = ""
-style = "bg:green"
-format = '[[ $symbol( $version) ](fg:crust bg:green)]($style)'
-
 [c]
 symbol = " "
 style = "bg:green"
@@ -153,7 +147,7 @@ style = "bg:lavender"
 format = '[[  $time ](fg:crust bg:lavender)]($style)'
 
 [line_break]
-disabled = true
+disabled = false
 
 [character]
 disabled = false
@@ -169,7 +163,7 @@ show_milliseconds = true
 format = " in $duration "
 style = "bg:lavender"
 disabled = false
-show_notifications = true
+show_notifications = false
 min_time_to_notify = 45000
 
 [palettes.catppuccin_mocha]
